@@ -1,0 +1,31 @@
+---
+import {PortableText} from 'astro-portabletext'
+import Figura from './pt/Figura.astro'
+import GalleriaTesto from './pt/GalleriaTesto.astro'
+import type {BloccoTesto} from '../lib/types'
+
+interface Props {
+  blocchi: BloccoTesto[]
+}
+
+const {blocchi} = Astro.props
+const components = {type: {figura: Figura, galleria: GalleriaTesto}}
+---
+
+{
+  blocchi.length > 0 && (
+    <div class="testo">
+      <PortableText value={blocchi} components={components} />
+    </div>
+  )
+}
+
+<style>
+  .testo :global(h2) {
+    margin-top: 2.5rem;
+    font-size: 1.8rem;
+  }
+  .testo :global(ul) {
+    padding-left: 1.2rem;
+  }
+</style>

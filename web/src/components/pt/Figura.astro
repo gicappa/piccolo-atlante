@@ -1,0 +1,26 @@
+---
+import Foto from '../Foto.astro'
+import type {BloccoTesto} from '../../lib/types'
+
+type Props = {node: Extract<BloccoTesto, {_type: 'figura'}>}
+const {node} = Astro.props
+const formato = node.formato ?? 'normale'
+---
+
+<div class:list={['figura', formato]}>
+  <Foto foto={node.foto} sizes={formato === 'piena' ? '100vw' : '(min-width: 64rem) 58rem, 100vw'} />
+</div>
+
+<style>
+  .figura {
+    margin-block: 2.5rem;
+  }
+  .larga {
+    width: min(var(--larga), 100vw - 2 * var(--margine));
+    margin-inline: calc((min(var(--larga), 100vw - 2 * var(--margine)) - 100%) / -2);
+  }
+  .piena {
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+  }
+</style>

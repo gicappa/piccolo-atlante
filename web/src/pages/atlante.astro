@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro'
+import Intestazione from '../components/Intestazione.astro'
+import Mappa from '../components/Mappa.astro'
+import {contenuti, puntiAtlante} from '../lib/contenuti'
+
+const punti = puntiAtlante(await contenuti())
+---
+
+<Base titolo="Atlante" descrizione="Tutti i luoghi raccontati, su una mappa.">
+  <Intestazione titolo="Atlante" sottotitolo="Tutti i luoghi raccontati. Tocca un punto per leggerne la storia." />
+  <div class="contenitore">
+    {
+      punti.length > 0 ? (
+        <Mappa punti={punti} modo="atlante" altezza="min(75vh, 44rem)" etichetta="Mappa di tutti i luoghi raccontati" />
+      ) : (
+        <p class="vuoto">Ancora nessun luogo sulla mappa.</p>
+      )
+    }
+  </div>
+</Base>
+
+<style>
+  .vuoto {
+    text-align: center;
+    font-style: italic;
+    color: var(--matita);
+  }
+</style>

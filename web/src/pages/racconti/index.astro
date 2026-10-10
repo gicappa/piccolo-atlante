@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro'
+import Intestazione from '../../components/Intestazione.astro'
+import Archivio from '../../components/Archivio.astro'
+import {contenuti} from '../../lib/contenuti'
+import {voceRacconto, voceTappa} from '../../lib/archivio'
+
+const {viaggi, racconti} = await contenuti()
+const voci = [...racconti.map(voceRacconto), ...viaggi.flatMap((v) => v.tappe.map((t) => voceTappa(v, t)))]
+---
+
+<Base titolo="Racconti" descrizione="Passeggiate, giornate, città e singole tappe di viaggio.">
+  <Intestazione titolo="Racconti" sottotitolo="Storie brevi e singole tappe, da leggere a piccoli pezzi." />
+  <div class="contenitore">
+    <Archivio voci={voci} vuoto="Il primo racconto arriverà presto." />
+  </div>
+</Base>

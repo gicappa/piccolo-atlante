@@ -1,0 +1,33 @@
+---
+// Titolo di pagina centrato, con etichetta sopra e sottotitolo sotto
+interface Props {
+  etichetta?: string
+  titolo: string
+  sottotitolo?: string
+}
+const {etichetta, titolo, sottotitolo} = Astro.props
+---
+
+<header class="intestazione colonna">
+  {etichetta && <p class="etichetta">{etichetta}</p>}
+  <h1>{titolo}</h1>
+  {sottotitolo && <p class="sottotitolo">{sottotitolo}</p>}
+  <slot />
+</header>
+
+<style>
+  .intestazione {
+    text-align: center;
+    margin-block: clamp(2.5rem, 7vw, 5rem) clamp(2rem, 5vw, 3.5rem);
+  }
+  .etichetta {
+    margin-bottom: 1rem;
+  }
+  .sottotitolo {
+    font-family: var(--titoli);
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--matita);
+    margin: 0;
+  }
+</style>

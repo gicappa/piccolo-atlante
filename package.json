@@ -1,0 +1,11 @@
+{
+  "name": "piccolo-atlante",
+  "private": true,
+  "workspaces": ["web", "studio"],
+  "scripts": {
+    "dev": "npm run dev -w web",
+    "build": "npm run build -w web",
+    "studio": "npm run dev -w studio",
+    "studio:deploy": "npm run deploy -w studio"
+  }
+}

@@ -1,0 +1,33 @@
+---
+import {tileAttribution, tileUrl} from '../lib/config'
+import type {PuntoMappa} from '../scripts/mappa'
+
+interface Props {
+  punti: PuntoMappa[]
+  /** atlante: tutti i luoghi, raggruppati; percorso: tappe numerate unite da una linea */
+  modo: 'atlante' | 'percorso'
+  altezza?: string
+  etichetta: string
+}
+
+const {punti, modo, altezza = '28rem', etichetta} = Astro.props
+const dati = JSON.stringify({punti, modo, tileUrl, tileAttribution})
+---
+
+{
+  punti.length > 0 && (
+    <div class="mappa" data-mappa={dati} style={`height: ${altezza}`} role="region" aria-label={etichetta} />
+  )
+}
+
+<script>
+  import {avviaMappe} from '../scripts/mappa'
+  avviaMappe()
+</script>
+
+<style>
+  .mappa {
+    width: 100%;
+    background: var(--carta-scura);
+  }
+</style>

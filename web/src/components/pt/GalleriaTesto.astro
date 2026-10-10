@@ -1,0 +1,19 @@
+---
+import Galleria from '../Galleria.astro'
+import type {BloccoTesto} from '../../lib/types'
+
+type Props = {node: Extract<BloccoTesto, {_type: 'galleria'}>}
+const {node} = Astro.props
+---
+
+<div class="galleria-testo">
+  <Galleria foto={node.foto} />
+</div>
+
+<style>
+  .galleria-testo {
+    margin-block: 2.5rem;
+    width: min(var(--larga), 100vw - 2 * var(--margine));
+    margin-inline: calc((min(var(--larga), 100vw - 2 * var(--margine)) - 100%) / -2);
+  }
+</style>

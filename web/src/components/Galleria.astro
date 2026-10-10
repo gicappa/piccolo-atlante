@@ -1,0 +1,42 @@
+---
+import Foto from './Foto.astro'
+import {fotoUrl} from '../lib/image'
+import type {Foto as TFoto} from '../lib/types'
+
+interface Props {
+  foto: TFoto[]
+}
+
+const {foto} = Astro.props
+---
+
+<div class="galleria" data-n={foto.length}>
+  {
+    foto.map((f) => (
+      <a href={fotoUrl(f, 2400)} class="voce" target="_blank" rel="noopener">
+        <Foto foto={f} sizes="(min-width: 64rem) 29rem, 50vw" />
+      </a>
+    ))
+  }
+</div>
+
+<style>
+  .galleria {
+    columns: 2;
+    column-gap: 1rem;
+  }
+  .galleria[data-n='1'] {
+    columns: 1;
+  }
+  @media (min-width: 64rem) {
+    .galleria[data-n]:not([data-n='1']):not([data-n='2']):not([data-n='4']) {
+      columns: 3;
+    }
+  }
+  .voce {
+    display: block;
+    break-inside: avoid;
+    margin-bottom: 1rem;
+    text-decoration: none;
+  }
+</style>

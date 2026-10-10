@@ -1,0 +1,61 @@
+---
+import Base from '../../layouts/Base.astro'
+import Copertina from '../../components/Copertina.astro'
+import Intestazione from '../../components/Intestazione.astro'
+import Testo from '../../components/Testo.astro'
+import Mappa from '../../components/Mappa.astro'
+import Galleria from '../../components/Galleria.astro'
+import {contenuti, urlRacconto} from '../../lib/contenuti'
+import {etichetta} from '../../lib/archivio'
+import {estratto} from '../../lib/estratto'
+import {formattaPeriodo} from '../../lib/formato'
+import type {Racconto} from '../../lib/types'
+
+export async function getStaticPaths() {
+  const {racconti} = await contenuti()
+  return racconti.map((racconto) => ({params: {racconto: racconto.slug}, props: {racconto}}))
+}
+
+const {racconto} = Astro.props as {racconto: Racconto}
+const punti = racconto.luoghi.map((l) => ({
+  nome: l.nome,
+  lat: l.lat,
+  lng: l.lng,
+  voci: [{titolo: racconto.titolo, url: urlRacconto(racconto)}],
+}))
+---
+
+<Base titolo={racconto.titolo} descrizione={racconto.sottotitolo ?? estratto(racconto.testo, 160)} immagine={racconto.copertina}>
+  <Copertina foto={racconto.copertina} />
+  <Intestazione
+    etichetta={etichetta(racconto.tipo?.titolo ?? 'Racconto', formattaPeriodo(racconto.periodo))}
+    titolo={racconto.titolo}
+    sottotitolo={racconto.sottotitolo}
+  />
+
+  <article class="colonna">
+    <Testo blocchi={racconto.testo} />
+  </article>
+
+  {
+    racconto.galleria.length > 0 && (
+      <section class="contenitore sezione">
+        <hr class="separatore" />
+        <Galleria foto={racconto.galleria} />
+      </section>
+    )
+  }
+
+  {
+    punti.length > 0 && (
+      <section class="contenitore sezione">
+        <Mappa
+          punti={punti}
+          modo={punti.length > 1 ? 'percorso' : 'atlante'}
+          altezza="20rem"
+          etichetta={`Mappa: ${racconto.titolo}`}
+        />
+      </section>
+    )
+  }
+</Base>

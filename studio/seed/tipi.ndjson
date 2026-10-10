@@ -1,0 +1,9 @@
+{"_id": "tipo-grande-viaggio", "_type": "tipo", "titolo": "Grande viaggio", "slug": {"_type": "slug", "current": "grande-viaggio"}}
+{"_id": "tipo-weekend", "_type": "tipo", "titolo": "Weekend", "slug": {"_type": "slug", "current": "weekend"}}
+{"_id": "tipo-cammino", "_type": "tipo", "titolo": "Cammino", "slug": {"_type": "slug", "current": "cammino"}}
+{"_id": "tipo-citta", "_type": "tipo", "titolo": "Città", "slug": {"_type": "slug", "current": "citta"}}
+{"_id": "tipo-passeggiata", "_type": "tipo", "titolo": "Passeggiata", "slug": {"_type": "slug", "current": "passeggiata"}}
+{"_id": "tipo-giornata-speciale", "_type": "tipo", "titolo": "Giornata speciale", "slug": {"_type": "slug", "current": "giornata-speciale"}}
+{"_id": "tipo-mare", "_type": "tipo", "titolo": "Mare", "slug": {"_type": "slug", "current": "mare"}}
+{"_id": "tipo-montagna", "_type": "tipo", "titolo": "Montagna", "slug": {"_type": "slug", "current": "montagna"}}
+{"_id": "impostazioni", "_type": "impostazioni", "apertura": "Un piccolo atlante di famiglia. Luoghi lontani e luoghi a due passi da casa, raccontati con calma, una tappa alla volta.", "colophon": "Scritto a mano, un viaggio alla volta."}

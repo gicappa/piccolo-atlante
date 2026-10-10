@@ -1,0 +1,144 @@
+---
+import Scheda from './Scheda.astro'
+import type {Foto} from '../lib/types'
+
+export type VoceArchivio = {
+  url: string
+  titolo: string
+  sottotitolo?: string
+  etichetta: string
+  copertina?: Foto
+  /** data ISO, per l'ordinamento */
+  data: string
+  anno: number
+  paesi: string[]
+  regioni: string[]
+  tipo?: string
+}
+
+interface Props {
+  voci: VoceArchivio[]
+  vuoto: string
+}
+
+const {voci, vuoto} = Astro.props
+const ordina = (a: string[]) => [...new Set(a)].sort((x, y) => x.localeCompare(y, 'it'))
+const anni = [...new Set(voci.map((v) => v.anno))].sort((a, b) => b - a)
+const paesi = ordina(voci.flatMap((v) => v.paesi))
+const regioni = ordina(voci.flatMap((v) => v.regioni))
+const tipi = ordina(voci.flatMap((v) => (v.tipo ? [v.tipo] : [])))
+const filtri = [
+  {nome: 'anno', etichetta: 'Anno', valori: anni.map(String)},
+  {nome: 'paese', etichetta: 'Paese', valori: paesi},
+  {nome: 'regione', etichetta: 'Regione', valori: regioni},
+  {nome: 'tipo', etichetta: 'Tipo', valori: tipi},
+].filter((f) => f.valori.length > 1)
+---
+
+{
+  voci.length === 0 ? (
+    <p class="vuoto">{vuoto}</p>
+  ) : (
+    <div class="archivio" data-archivio>
+      {filtri.length > 0 && (
+        <form class="filtri" aria-label="Filtra">
+          {filtri.map((f) => (
+            <label>
+              <span class="etichetta">{f.etichetta}</span>
+              <select name={f.nome}>
+                <option value="">Tutti</option>
+                {f.valori.map((v) => (
+                  <option value={v}>{v}</option>
+                ))}
+              </select>
+            </label>
+          ))}
+        </form>
+      )}
+      {anni.map((a) => (
+        <section class="anno" data-anno-gruppo>
+          <h2>{a}</h2>
+          <div class="griglia">
+            {voci
+              .filter((v) => v.anno === a)
+              .sort((x, y) => y.data.localeCompare(x.data))
+              .map((v) => (
+                <div
+                  data-voce
+                  data-anno={v.anno}
+                  data-paese={v.paesi.join('|')}
+                  data-regione={v.regioni.join('|')}
+                  data-tipo={v.tipo ?? ''}
+                >
+                  <Scheda {...v} />
+                </div>
+              ))}
+          </div>
+        </section>
+      ))}
+      <p class="vuoto" data-nessuno hidden>
+        Nessun racconto con questi filtri.
+      </p>
+    </div>
+  )
+}
+
+<script>
+  // Filtri lato browser: i contenuti sono pochi e già tutti nella pagina
+  for (const archivio of document.querySelectorAll<HTMLElement>('[data-archivio]')) {
+    const form = archivio.querySelector('form')
+    if (!form) continue
+    const applica = () => {
+      const scelte = [...new FormData(form)].filter(([, v]) => v) as [string, string][]
+      for (const voce of archivio.querySelectorAll<HTMLElement>('[data-voce]'))
+        voce.hidden = !scelte.every(([k, v]) => (voce.dataset[k] ?? '').split('|').includes(v))
+      let visibili = 0
+      for (const gruppo of archivio.querySelectorAll<HTMLElement>('[data-anno-gruppo]')) {
+        const n = gruppo.querySelectorAll('[data-voce]:not([hidden])').length
+        gruppo.hidden = n === 0
+        visibili += n
+      }
+      archivio.querySelector<HTMLElement>('[data-nessuno]')!.hidden = visibili > 0
+    }
+    form.addEventListener('change', applica)
+  }
+</script>
+
+<style>
+  .filtri {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--linea);
+  }
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  select {
+    font: inherit;
+    font-size: 0.95rem;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--linea);
+    padding: 0.2rem 1.5rem 0.2rem 0;
+    color: var(--inchiostro);
+  }
+  .anno h2 {
+    margin-top: 3rem;
+    font-style: italic;
+    color: var(--matita);
+  }
+  .griglia {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    gap: 3rem 2rem;
+  }
+  .vuoto {
+    font-style: italic;
+    color: var(--matita);
+  }
+</style>

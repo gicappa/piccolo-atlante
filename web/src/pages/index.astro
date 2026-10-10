@@ -1,0 +1,109 @@
+---
+import Base from '../layouts/Base.astro'
+import Scheda from '../components/Scheda.astro'
+import Mappa from '../components/Mappa.astro'
+import {contenuti, puntiAtlante} from '../lib/contenuti'
+import {voceRacconto, voceViaggio} from '../lib/archivio'
+
+const dati = await contenuti()
+const {viaggi, racconti, impostazioni} = dati
+
+// Tutto in ordine di data; in apertura il più recente tra quelli "in evidenza", altrimenti il più recente in assoluto
+const tutti = [
+  ...viaggi.map((v) => ({inizio: v.periodo.inizio, inEvidenza: v.inEvidenza, voce: voceViaggio(v)})),
+  ...racconti.map((r) => ({inizio: r.periodo.inizio, inEvidenza: r.inEvidenza, voce: voceRacconto(r)})),
+].sort((a, b) => b.inizio.localeCompare(a.inizio))
+const apertura = tutti.find((x) => x.inEvidenza) ?? tutti[0]
+const altri = tutti.filter((x) => x !== apertura).slice(0, 6)
+const punti = puntiAtlante(dati)
+---
+
+<Base immagine={apertura?.voce.copertina}>
+  {
+    impostazioni.apertura && (
+      <section class="apertura colonna">
+        <p>{impostazioni.apertura}</p>
+      </section>
+    )
+  }
+
+  {
+    apertura && (
+      <section class="contenitore">
+        <Scheda {...apertura.voce} grande />
+      </section>
+    )
+  }
+
+  {
+    altri.length > 0 && (
+      <section class="contenitore sezione">
+        <div class="griglia">
+          {altri.map((x) => (
+            <Scheda {...x.voce} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    punti.length > 0 && (
+      <section class="contenitore sezione">
+        <div class="titolo-sezione">
+          <h2>L’atlante</h2>
+          <a href="/atlante/" class="etichetta">
+            Apri la mappa →
+          </a>
+        </div>
+        <Mappa punti={punti} modo="atlante" altezza="24rem" etichetta="Mappa di tutti i luoghi raccontati" />
+      </section>
+    )
+  }
+
+  {
+    tutti.length === 0 && (
+      <p class="colonna vuoto">Il primo racconto arriverà presto.</p>
+    )
+  }
+</Base>
+
+<style>
+  .apertura {
+    text-align: center;
+    margin-block: clamp(2rem, 6vw, 4.5rem);
+  }
+  .apertura p {
+    font-family: var(--titoli);
+    font-style: italic;
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    line-height: 1.4;
+    color: var(--matita);
+    margin: 0;
+  }
+  .griglia {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    gap: 3rem 2rem;
+  }
+  .titolo-sezione {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    border-top: 1px solid var(--linea);
+    padding-top: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .titolo-sezione h2 {
+    margin: 0;
+  }
+  .titolo-sezione a {
+    text-decoration: none;
+  }
+  .vuoto {
+    text-align: center;
+    font-style: italic;
+    color: var(--matita);
+  }
+</style>

@@ -1,0 +1,120 @@
+---
+import Base from '../../../layouts/Base.astro'
+import Copertina from '../../../components/Copertina.astro'
+import Intestazione from '../../../components/Intestazione.astro'
+import Testo from '../../../components/Testo.astro'
+import Mappa from '../../../components/Mappa.astro'
+import {contenuti, urlTappa, urlViaggio} from '../../../lib/contenuti'
+import {estratto} from '../../../lib/estratto'
+import {formattaData} from '../../../lib/formato'
+import type {Tappa, Viaggio} from '../../../lib/types'
+
+export async function getStaticPaths() {
+  const {viaggi} = await contenuti()
+  return viaggi.flatMap((viaggio) =>
+    viaggio.tappe.map((tappa) => ({params: {viaggio: viaggio.slug, tappa: tappa.slug}, props: {viaggio, tappa}})),
+  )
+}
+
+const {viaggio, tappa} = Astro.props as {viaggio: Viaggio; tappa: Tappa}
+const i = viaggio.tappe.indexOf(tappa)
+const precedente = viaggio.tappe[i - 1]
+const successiva = viaggio.tappe[i + 1]
+// La mappa mostra tutto il percorso, con la tappa corrente aperta per prima
+const punti = viaggio.tappe.flatMap((t) =>
+  t.luogo
+    ? [{nome: t.luogo.nome, lat: t.luogo.lat, lng: t.luogo.lng, numero: t.numero, voci: [{titolo: t.titolo, url: urlTappa(viaggio, t)}]}]
+    : [],
+)
+const sopra = [`Tappa ${tappa.numero} di ${viaggio.tappe.length}`, tappa.luogo?.nome, tappa.data && formattaData(tappa.data)]
+  .filter(Boolean)
+  .join(' · ')
+---
+
+<Base titolo={`${tappa.titolo} · ${viaggio.titolo}`} descrizione={estratto(tappa.testo, 160)} immagine={tappa.copertina ?? viaggio.copertina}>
+  <Copertina foto={tappa.copertina} />
+  <Intestazione etichetta={sopra} titolo={tappa.titolo}>
+    <p class="viaggio"><a href={urlViaggio(viaggio)}>{viaggio.titolo}</a></p>
+  </Intestazione>
+
+  <article class="colonna">
+    <Testo blocchi={tappa.testo} />
+    {
+      tappa.note && (
+        <aside class="note">
+          <p class="etichetta">Note e ricordi</p>
+          <p>{tappa.note}</p>
+        </aside>
+      )
+    }
+  </article>
+
+  {
+    punti.length > 0 && (
+      <section class="contenitore sezione">
+        <Mappa punti={punti} modo="percorso" altezza="20rem" etichetta={`Mappa del percorso: ${viaggio.titolo}`} />
+      </section>
+    )
+  }
+
+  <nav class="contenitore scorri" aria-label="Altre tappe">
+    {
+      precedente ? (
+        <a href={urlTappa(viaggio, precedente)}>
+          <span class="etichetta">← Tappa precedente</span>
+          {precedente.titolo}
+        </a>
+      ) : (
+        <span />
+      )
+    }
+    {
+      successiva && (
+        <a href={urlTappa(viaggio, successiva)} class="dopo">
+          <span class="etichetta">Tappa successiva →</span>
+          {successiva.titolo}
+        </a>
+      )
+    }
+  </nav>
+</Base>
+
+<style>
+  .viaggio {
+    margin: 1rem 0 0;
+    font-family: var(--titoli);
+    font-style: italic;
+    font-size: 1.3rem;
+  }
+  .note {
+    margin-top: 3rem;
+    padding: 1.4rem 1.6rem;
+    background: var(--carta-scura);
+    border-left: 2px solid var(--terra);
+    font-size: 0.95rem;
+  }
+  .note p:last-child {
+    margin: 0;
+    white-space: pre-line;
+  }
+  .scorri {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    border-top: 1px solid var(--linea);
+    padding-top: 2rem;
+  }
+  .scorri a {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    font-family: var(--titoli);
+    font-size: 1.35rem;
+    line-height: 1.2;
+    max-width: 50%;
+  }
+  .scorri .dopo {
+    text-align: right;
+    margin-left: auto;
+  }
+</style>

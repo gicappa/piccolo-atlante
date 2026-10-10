@@ -1,0 +1,220 @@
+@import '@fontsource-variable/source-serif-4/opsz.css';
+@import '@fontsource-variable/source-serif-4/opsz-italic.css';
+@import '@fontsource/cormorant-garamond/500.css';
+@import '@fontsource/cormorant-garamond/500-italic.css';
+
+:root {
+  --carta: #f7f3ec;
+  --carta-scura: #efe8dc;
+  --inchiostro: #2b2622;
+  --matita: #7a6f66;
+  --linea: #ddd3c4;
+  --terra: #8a4b2a;
+
+  --titoli: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
+  --testo: 'Source Serif 4 Variable', Georgia, serif;
+  --ui: system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --colonna: 38rem;
+  --larga: 58rem;
+  --pagina: 76rem;
+  --margine: clamp(1rem, 4vw, 2.5rem);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--carta);
+  color: var(--inchiostro);
+  font-family: var(--testo);
+  font-size: 18px;
+  line-height: 1.7;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--carta);
+}
+
+main {
+  flex: 1;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--linea);
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 0.2s;
+}
+
+a:hover {
+  text-decoration-color: var(--terra);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--titoli);
+  font-weight: 500;
+  line-height: 1.15;
+  margin: 0 0 0.5em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+}
+
+h2 {
+  font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+p {
+  margin: 0 0 1.2em;
+}
+
+blockquote {
+  margin: 2em 0;
+  padding: 0;
+  font-family: var(--titoli);
+  font-style: italic;
+  font-size: 1.6rem;
+  line-height: 1.35;
+  color: var(--matita);
+  text-align: center;
+}
+
+/* Etichette piccole: tipo, date, numero di tappa */
+.etichetta {
+  font-family: var(--ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--matita);
+}
+
+.contenitore {
+  width: 100%;
+  max-width: calc(var(--pagina) + 2 * var(--margine));
+  margin-inline: auto;
+  padding-inline: var(--margine);
+}
+
+.colonna {
+  max-width: calc(var(--colonna) + 2 * var(--margine));
+  margin-inline: auto;
+  padding-inline: var(--margine);
+}
+
+.sezione {
+  margin-block: clamp(3rem, 8vw, 6rem);
+}
+
+.separatore {
+  border: 0;
+  text-align: center;
+  margin: 4rem 0;
+}
+
+.separatore::before {
+  content: '· · ·';
+  color: var(--matita);
+  letter-spacing: 0.6em;
+}
+
+/* Mappe */
+.leaflet-container {
+  background: var(--carta-scura);
+  font-family: var(--ui);
+}
+
+.leaflet-tile-pane {
+  filter: sepia(0.25) saturate(0.85);
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--carta);
+  color: var(--inchiostro);
+  border-radius: 2px;
+  box-shadow: 0 2px 12px rgb(0 0 0 / 0.15);
+}
+
+.leaflet-popup-content {
+  margin: 0.9rem 1rem;
+  font-family: var(--testo);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.popup-nome {
+  font-family: var(--titoli);
+  font-size: 1.3rem;
+  margin-bottom: 0.4rem;
+}
+
+.popup-voce {
+  display: block;
+  margin-top: 0.4rem;
+  text-decoration: none;
+}
+
+.popup-voce span {
+  display: block;
+  font-family: var(--ui);
+  font-size: 0.72rem;
+  color: var(--matita);
+}
+
+.segno-tappa {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--carta);
+  border: 1.5px solid var(--terra);
+  color: var(--terra);
+  font: 600 12px/1 var(--ui);
+}
+
+.segno-luogo {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--terra);
+  border: 2px solid var(--carta);
+  box-shadow: 0 0 0 1px var(--terra);
+}
+
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  background: rgb(138 75 42 / 0.2);
+}
+
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+  background: var(--terra);
+  color: var(--carta);
+  font: 600 12px var(--ui);
+}

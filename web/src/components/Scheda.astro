@@ -1,0 +1,67 @@
+---
+import Foto from './Foto.astro'
+import type {Foto as TFoto} from '../lib/types'
+
+interface Props {
+  url: string
+  titolo: string
+  sottotitolo?: string
+  etichetta: string
+  copertina?: TFoto
+  grande?: boolean
+}
+
+const {url, titolo, sottotitolo, etichetta, copertina, grande = false} = Astro.props
+---
+
+<article class:list={['scheda', {grande}]}>
+  <a href={url}>
+    {
+      copertina && (
+        <Foto
+          foto={copertina}
+          ratio={grande ? 16 / 9 : 3 / 2}
+          didascalia={false}
+          eager={grande}
+          sizes={grande ? '(min-width: 76rem) 76rem, 100vw' : '(min-width: 64rem) 24rem, (min-width: 40rem) 50vw, 100vw'}
+        />
+      )
+    }
+    <div class="testi">
+      <p class="etichetta">{etichetta}</p>
+      <h3>{titolo}</h3>
+      {sottotitolo && <p class="sottotitolo">{sottotitolo}</p>}
+    </div>
+  </a>
+</article>
+
+<style>
+  a {
+    display: block;
+    text-decoration: none;
+  }
+  .testi {
+    padding-top: 0.9rem;
+  }
+  .etichetta {
+    margin: 0 0 0.3rem;
+  }
+  h3 {
+    margin: 0;
+    font-size: 1.6rem;
+  }
+  .grande h3 {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+  }
+  .sottotitolo {
+    margin: 0.3rem 0 0;
+    color: var(--matita);
+    font-style: italic;
+  }
+  a :global(img) {
+    transition: opacity 0.3s;
+  }
+  a:hover :global(img) {
+    opacity: 0.92;
+  }
+</style>

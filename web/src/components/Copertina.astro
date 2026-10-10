@@ -1,0 +1,29 @@
+---
+import Foto from './Foto.astro'
+import type {Foto as TFoto} from '../lib/types'
+
+interface Props {
+  foto?: TFoto
+}
+const {foto} = Astro.props
+---
+
+{
+  foto && (
+    <div class="copertina">
+      <Foto foto={foto} ratio={21 / 9} eager sizes="100vw" didascalia={false} />
+    </div>
+  )
+}
+
+<style>
+  .copertina :global(img) {
+    max-height: 78vh;
+    width: 100%;
+  }
+  @media (max-width: 40rem) {
+    .copertina :global(img) {
+      aspect-ratio: 4 / 3 !important;
+    }
+  }
+</style>

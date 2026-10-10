@@ -1,0 +1,16 @@
+---
+import Base from '../../layouts/Base.astro'
+import Intestazione from '../../components/Intestazione.astro'
+import Archivio from '../../components/Archivio.astro'
+import {contenuti} from '../../lib/contenuti'
+import {voceViaggio} from '../../lib/archivio'
+
+const {viaggi} = await contenuti()
+---
+
+<Base titolo="Viaggi" descrizione="Tutti i viaggi, dal più recente.">
+  <Intestazione titolo="Viaggi" sottotitolo="Dal più recente al più lontano nel tempo." />
+  <div class="contenitore">
+    <Archivio voci={viaggi.map(voceViaggio)} vuoto="Il primo viaggio arriverà presto." />
+  </div>
+</Base>

@@ -1,0 +1,127 @@
+---
+import '../styles/global.css'
+import {contenuti} from '../lib/contenuti'
+import {fotoUrl} from '../lib/image'
+import type {Foto} from '../lib/types'
+
+interface Props {
+  titolo?: string
+  descrizione?: string
+  immagine?: Foto
+}
+
+const {titolo, descrizione, immagine} = Astro.props
+const {impostazioni} = await contenuti()
+const NOME = 'Piccolo Atlante'
+const titoloPagina = titolo ? `${titolo} · ${NOME}` : `${NOME} · storie di luoghi vicini e lontani`
+const desc = descrizione ?? impostazioni.apertura ?? 'Storie di luoghi vicini e lontani'
+const og = immagine ? new URL(fotoUrl(immagine, 1200, 1200 / 630), Astro.site).href : undefined
+const voci = [
+  {href: '/atlante/', testo: 'Atlante'},
+  {href: '/viaggi/', testo: 'Viaggi'},
+  {href: '/racconti/', testo: 'Racconti'},
+]
+const attuale = Astro.url.pathname
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titoloPagina}</title>
+    <meta name="description" content={desc} />
+    <meta property="og:title" content={titolo ?? NOME} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:type" content="article" />
+    {og && <meta property="og:image" content={og} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+  </head>
+  <body>
+    <header class="testata contenitore">
+      <a href="/" class="marchio">
+        <span class="nome">Piccolo Atlante</span>
+        <span class="motto">storie di luoghi vicini e lontani</span>
+      </a>
+      <nav aria-label="Principale">
+        {
+          voci.map((v) => (
+            <a href={v.href} aria-current={attuale.startsWith(v.href) ? 'page' : undefined}>
+              {v.testo}
+            </a>
+          ))
+        }
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="piede contenitore">
+      <p>{impostazioni.colophon ?? 'Piccolo Atlante'}</p>
+      <p class="etichetta">© {new Date().getFullYear()} · Piccolo Atlante</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .testata {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    padding-block: 1.6rem;
+  }
+  .marchio {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+  .nome {
+    font-family: var(--titoli);
+    font-size: 1.7rem;
+  }
+  .motto {
+    font-family: var(--titoli);
+    font-style: italic;
+    color: var(--matita);
+    font-size: 1rem;
+  }
+  nav {
+    display: flex;
+    gap: 1.5rem;
+    font-family: var(--ui);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  nav a {
+    text-decoration: none;
+    color: var(--matita);
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+  }
+  nav a:hover,
+  nav a[aria-current='page'] {
+    color: var(--inchiostro);
+    border-color: var(--terra);
+  }
+  .piede {
+    margin-top: 6rem;
+    padding-block: 3rem;
+    border-top: 1px solid var(--linea);
+    text-align: center;
+    color: var(--matita);
+    font-family: var(--titoli);
+    font-style: italic;
+    font-size: 1.15rem;
+  }
+  .piede p {
+    margin: 0 0 0.5rem;
+  }
+  .piede .etichetta {
+    font-style: normal;
+  }
+</style>

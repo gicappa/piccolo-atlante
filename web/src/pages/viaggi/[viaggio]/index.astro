@@ -1,0 +1,108 @@
+---
+import Base from '../../../layouts/Base.astro'
+import Copertina from '../../../components/Copertina.astro'
+import Intestazione from '../../../components/Intestazione.astro'
+import Testo from '../../../components/Testo.astro'
+import Mappa from '../../../components/Mappa.astro'
+import Foto from '../../../components/Foto.astro'
+import Galleria from '../../../components/Galleria.astro'
+import {contenuti, urlTappa} from '../../../lib/contenuti'
+import {etichetta} from '../../../lib/archivio'
+import {estratto} from '../../../lib/estratto'
+import {formattaData, formattaPeriodo} from '../../../lib/formato'
+import type {Viaggio} from '../../../lib/types'
+
+export async function getStaticPaths() {
+  const {viaggi} = await contenuti()
+  return viaggi.map((viaggio) => ({params: {viaggio: viaggio.slug}, props: {viaggio}}))
+}
+
+const {viaggio} = Astro.props as {viaggio: Viaggio}
+const punti = viaggio.tappe.flatMap((t) =>
+  t.luogo
+    ? [{nome: t.luogo.nome, lat: t.luogo.lat, lng: t.luogo.lng, numero: t.numero, voci: [{titolo: t.titolo, url: urlTappa(viaggio, t)}]}]
+    : [],
+)
+---
+
+<Base titolo={viaggio.titolo} descrizione={viaggio.sottotitolo ?? estratto(viaggio.introduzione, 160)} immagine={viaggio.copertina}>
+  <Copertina foto={viaggio.copertina} />
+  <Intestazione
+    etichetta={etichetta(viaggio.tipo?.titolo, formattaPeriodo(viaggio.periodo))}
+    titolo={viaggio.titolo}
+    sottotitolo={viaggio.sottotitolo}
+  />
+
+  <article class="colonna">
+    <Testo blocchi={viaggio.introduzione} />
+  </article>
+
+  {
+    punti.length > 0 && (
+      <section class="contenitore sezione">
+        <Mappa punti={punti} modo="percorso" etichetta={`Mappa del percorso: ${viaggio.titolo}`} />
+      </section>
+    )
+  }
+
+  {
+    viaggio.tappe.length > 0 && (
+      <section class="contenitore sezione tappe" aria-label="Tappe">
+        {viaggio.tappe.map((t) => (
+          <a href={urlTappa(viaggio, t)} class="tappa" id={t.slug}>
+            {t.copertina && <Foto foto={t.copertina} ratio={4 / 3} didascalia={false} sizes="(min-width: 50rem) 36rem, 100vw" />}
+            <div class="testi">
+              <p class="etichetta">
+                Tappa {t.numero}
+                {t.luogo && ` · ${t.luogo.nome}`}
+                {t.data && ` · ${formattaData(t.data)}`}
+              </p>
+              <h2>{t.titolo}</h2>
+              <p class="estratto">{estratto(t.testo)}</p>
+              <span class="leggi etichetta">Leggi la tappa →</span>
+            </div>
+          </a>
+        ))}
+      </section>
+    )
+  }
+
+  {
+    viaggio.galleria.length > 0 && (
+      <section class="contenitore sezione">
+        <hr class="separatore" />
+        <Galleria foto={viaggio.galleria} />
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .tappe {
+    display: grid;
+    gap: clamp(3rem, 8vw, 6rem);
+  }
+  .tappa {
+    display: grid;
+    gap: 1.5rem 3rem;
+    align-items: center;
+    text-decoration: none;
+  }
+  @media (min-width: 50rem) {
+    .tappa {
+      grid-template-columns: 1fr 1fr;
+    }
+    .tappa:nth-child(even) > :global(figure) {
+      order: 2;
+    }
+  }
+  .tappa h2 {
+    margin: 0.3rem 0 0.8rem;
+  }
+  .estratto {
+    color: var(--matita);
+  }
+  .leggi {
+    color: var(--terra);
+  }
+</style>
