@@ -18,11 +18,13 @@ Finché `SANITY_PROJECT_ID` non è impostato, il sito usa i contenuti di prova i
 
 ## Collegare Sanity (una volta sola)
 
-1. Crea un progetto gratuito su [sanity.io](https://www.sanity.io) con il dataset `production` e annota il *Project ID*.
-2. Copia `studio/.env.example` in `studio/.env` e `web/.env.example` in `web/.env`, inserendo il Project ID.
+Il progetto Sanity è `e7n48nwr` (dataset `production`), già impostato nel pannello.
+
+1. Per far leggere al sito i contenuti veri, copia `web/.env.example` in `web/.env`.
+2. Accedi con `cd studio && npx sanity login`.
 3. Carica i tipi di esperienza e le impostazioni iniziali:
    ```sh
-   cd studio && npx sanity dataset import seed/tipi.ndjson production
+   npx sanity dataset import seed/tipi.ndjson production
    ```
 4. Avvia il pannello in locale con `npm run studio`, oppure pubblicalo su `https://piccolo-atlante.sanity.studio` con `npm run studio:deploy`.
 

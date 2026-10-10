@@ -7,8 +7,8 @@ import {structure, singletonTypes} from './structure'
 export default defineConfig({
   name: 'piccolo-atlante',
   title: 'Piccolo Atlante',
-  projectId: process.env.SANITY_STUDIO_PROJECT_ID ?? 'da-configurare',
-  dataset: process.env.SANITY_STUDIO_DATASET ?? 'production',
+  projectId: process.env.SANITY_STUDIO_PROJECT_ID || 'e7n48nwr',
+  dataset: process.env.SANITY_STUDIO_DATASET || 'production',
   plugins: [structureTool({structure}), itITLocale()],
   schema: {
     types: schemaTypes,
