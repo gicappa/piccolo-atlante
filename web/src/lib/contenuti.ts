@@ -1,4 +1,4 @@
-import {sanityProjectId} from './config'
+import {demo} from './config'
 import {caricaDaSanity} from './sanity'
 import {contenutiDemo} from './demo'
 import type {Contenuti, Luogo, Racconto, Tappa, Viaggio} from './types'
@@ -6,9 +6,9 @@ import {anno} from './formato'
 
 let cache: Promise<Contenuti> | undefined
 
-/** Tutti i contenuti del sito, letti una volta sola per build. Senza Sanity configurato usa i contenuti di prova. */
+/** Tutti i contenuti del sito, letti una volta sola per build. Con DEMO=true usa i contenuti di prova. */
 export function contenuti(): Promise<Contenuti> {
-  cache ??= sanityProjectId ? caricaDaSanity() : Promise.resolve(contenutiDemo)
+  cache ??= demo ? Promise.resolve(contenutiDemo) : caricaDaSanity()
   return cache
 }
 

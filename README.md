@@ -11,22 +11,21 @@ studio/  il pannello dove si scrivono i contenuti (Sanity Studio)
 
 ```sh
 npm install
-npm run dev        # sito su http://localhost:4321 con i contenuti di prova
+npm run dev        # sito su http://localhost:4321 con i contenuti di Sanity
 ```
 
-Finché `SANITY_PROJECT_ID` non è impostato, il sito usa i contenuti di prova in `web/src/lib/demo.ts`.
+Per lavorare con i contenuti di prova in `web/src/lib/demo.ts`, copia `web/.env.example` in `web/.env` (contiene `DEMO=true`).
 
 ## Collegare Sanity (una volta sola)
 
 Il progetto Sanity è `e7n48nwr` (dataset `production`), già impostato nel pannello.
 
-1. Per far leggere al sito i contenuti veri, copia `web/.env.example` in `web/.env`.
-2. Accedi con `cd studio && npx sanity login`.
-3. Carica i tipi di esperienza e le impostazioni iniziali:
+1. Accedi con `cd studio && npx sanity login`.
+2. Carica i tipi di esperienza e le impostazioni iniziali:
    ```sh
    npx sanity dataset import seed/tipi.ndjson production
    ```
-4. Avvia il pannello in locale con `npm run studio`, oppure pubblicalo su `https://piccolo-atlante.sanity.studio` con `npm run studio:deploy`.
+3. Avvia il pannello in locale con `npm run studio`, oppure pubblicalo su `https://piccolo-atlante.sanity.studio` con `npm run studio:deploy`.
 
 Per far entrare altre persone nel pannello: *Members* nella pagina del progetto su sanity.io.
 
@@ -37,7 +36,7 @@ La configurazione è in `wrangler.jsonc` (si pubblicano solo i file statici di `
 
 - Comando di build: `npm run build`
 - Comando di deploy: `npx wrangler deploy`
-- Variabili **di build** (Settings → Build → Variables and secrets): `SANITY_PROJECT_ID=e7n48nwr`, `SANITY_DATASET=production`, e `SITE_URL` quando c'è il dominio.
+- Nessuna variabile obbligatoria: il progetto Sanity è già nel codice. Quando c'è il dominio, aggiungi `SITE_URL` tra le variabili **di build** (Settings → Build → Variables and secrets), non tra quelle del Worker.
 
 Per ripubblicare quando si preme "Pubblica" nel pannello: in Cloudflare crea un *Deploy hook* (Settings → Build → Deploy hooks), poi in Sanity *API → Webhooks* crea un webhook con quell'URL, filtro
 `_type in ["viaggio", "tappa", "racconto", "luogo", "tipo", "impostazioni"]`, sugli eventi crea, aggiorna e cancella.

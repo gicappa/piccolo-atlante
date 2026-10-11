@@ -2,14 +2,14 @@ import {createImageUrlBuilder} from '@sanity/image-url'
 import {sanityDataset, sanityProjectId} from './config'
 import type {Foto} from './types'
 
-const builder = sanityProjectId ? createImageUrlBuilder({projectId: sanityProjectId, dataset: sanityDataset}) : null
+const builder = createImageUrlBuilder({projectId: sanityProjectId, dataset: sanityDataset})
 
 const LARGHEZZE = [480, 800, 1200, 1600, 2400]
 
 /** URL di una foto alla larghezza richiesta; con `ratio` la ritaglia rispettando il punto focale. */
 export function fotoUrl(foto: Foto, width: number, ratio?: number): string {
   if (foto.kind === 'static') return foto.url
-  let img = builder!.image(foto.source).width(width).auto('format').quality(78)
+  let img = builder.image(foto.source).width(width).auto('format').quality(78)
   if (ratio) img = img.height(Math.round(width / ratio)).fit('crop')
   return img.url()
 }

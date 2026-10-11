@@ -6,7 +6,7 @@ import type {BloccoTesto, Contenuti, Foto, Luogo, Racconto, Tappa, Viaggio} from
 // Solo contenuti pubblicati: le bozze restano nel pannello finché non si preme "Pubblica"
 const client = () =>
   createClient({
-    projectId: sanityProjectId!,
+    projectId: sanityProjectId,
     dataset: sanityDataset,
     apiVersion: '2025-02-19',
     useCdn: false,
