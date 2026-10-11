@@ -1,0 +1,10 @@
+// Pubblicazione su Cloudflare: il sito è statico, si servono solo i file generati in web/dist
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "piccolo-atlante",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./web/dist",
+    "not_found_handling": "404-page"
+  }
+}
