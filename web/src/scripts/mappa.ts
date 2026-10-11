@@ -42,7 +42,7 @@ function popup(p: PuntoMappa): HTMLElement {
 async function crea(el: HTMLElement) {
   const {punti, modo, tileUrl, tileAttribution} = JSON.parse(el.dataset.mappa!) as Dati
   const mappa = L.map(el, {scrollWheelZoom: false, worldCopyJump: true})
-  L.tileLayer(tileUrl, {attribution: tileAttribution, subdomains: 'abcd', maxZoom: 18}).addTo(mappa)
+  L.tileLayer(tileUrl, {attribution: tileAttribution, maxZoom: 18}).addTo(mappa)
   const coordinate = punti.map((p) => L.latLng(p.lat, p.lng))
 
   if (modo === 'percorso') {

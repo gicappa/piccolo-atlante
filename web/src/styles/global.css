@@ -147,7 +147,7 @@ blockquote {
 }
 
 .leaflet-tile-pane {
-  filter: sepia(0.25) saturate(0.85);
+  filter: grayscale(0.55) sepia(0.25) contrast(0.92) brightness(1.04);
 }
 
 .leaflet-popup-content-wrapper,

@@ -7,8 +7,8 @@ import 'leaflet/dist/leaflet.css'
 type Geopoint = {_type: 'geopoint'; lat: number; lng: number}
 type Risultato = {display_name: string; lat: string; lon: string}
 
-const TILE_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
-const ATTRIBUZIONE = '&copy; OpenStreetMap &copy; CARTO'
+const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+const ATTRIBUZIONE = '&copy; OpenStreetMap'
 
 // Scelta della posizione di un luogo: si cerca per nome oppure si clicca sulla mappa
 export function PosizioneInput(props: ObjectInputProps<Geopoint>) {
@@ -31,7 +31,7 @@ export function PosizioneInput(props: ObjectInputProps<Geopoint>) {
       value ? [value.lat, value.lng] : [44, 11],
       value ? 11 : 4,
     )
-    L.tileLayer(TILE_URL, {attribution: ATTRIBUZIONE, subdomains: 'abcd', maxZoom: 19}).addTo(m)
+    L.tileLayer(TILE_URL, {attribution: ATTRIBUZIONE, maxZoom: 19}).addTo(m)
     m.on('click', (e: L.LeafletMouseEvent) => scegli(e.latlng.lat, e.latlng.lng))
     mappa.current = m
     return () => {

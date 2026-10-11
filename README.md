@@ -60,4 +60,4 @@ Anno, paese e regione per i filtri si ricavano da date e luoghi.
 
 ## Mappe
 
-Leaflet con la mappa CARTO Positron (dati OpenStreetMap), resa più calda con un filtro seppia. Per cambiarla basta `PUBLIC_TILE_URL` in `web/.env`.
+Leaflet con le mappe di OpenStreetMap (gratuite, senza chiave), ammorbidite con un filtro CSS. Per cambiarla basta `PUBLIC_TILE_URL` in `web/.env`.
